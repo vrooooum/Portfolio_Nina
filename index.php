@@ -320,18 +320,26 @@ AOS.init();
 							</form>
 								
 								<?php
-									if (isset($_POST['message'])) {
-							     		$position_arobase = strpos($_POST['mail'], '@');
-							     		if ($position_arobase == false)
-							         		echo '<p>Votre email n\'est pas valide.</p>';
-	                             		else {
-	                                   		$retour = mail('ninaantkowiak.pro@gmail.com', $_POST['objet'], $_POST['message'], 'From: ' . $_POST['mail']);
-	                                   		if($retour)
-	                                       		echo '<p>Votre message a été envoyé.</p>';
-	                                   		else
-	                                       		echo '<p>Erreur.</p>';
-	                             		}
-						    		}
+								if(isset($_POST['message'])){
+								    $position_arobase = strpos($_POST['mail'], '@');
+								    if ($position_arobase === false)
+								        echo '<p>Votre email doit comporter un arobase.</p>';
+								    else {
+								        $entete  = 'MIME-Version: 1.0' . "\r\n";
+								        $entete .= 'Content-type: text/html; charset=utf-8' . "\r\n";
+								        $entete .= 'From: ' . $_POST['mail'] . "\r\n";
+								    
+								        $message = '<h1>Un futur client vient de te contacter</h1><br><br>
+                                        <p><b>Email : </b>' . $_POST['mail'] . '<br><br>
+                                        <b>Objet : </b>' . $_POST['objet'] . '<br><br>
+                                        <b>Message : </b><br>' . $_POST['message'] . '</p>';
+								    
+								        $retour = mail('ninaantkowiak.pro@gmail.com', 'Envoi depuis page Contact', $message, $entete);
+								    if($retour) {
+								        echo '<p>Votre message a bien été envoyé.</p>';
+								    }
+								    }
+								}
 								?>
 								
 						</div>
